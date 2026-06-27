@@ -5,65 +5,125 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>신경계 응급키트 · 안전모드 연구소</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/static/pretendard.css" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&display=swap" />
 <style>
   :root{
-    --cream:#F3EFE8;
-    --sand:#ECE6D9;
-    --ink:#2B2B28;
-    --muted:#79746B;
-    --green:#3A6B52;
-    --green-soft:#7FA890;
-    --green-tint:#E2EBE3;
-    --line:#DED8CD;
-    --radius:22px;
+    --cream:#F3EFE8; --sand:#ECE6D9; --ink:#2B2B28; --muted:#79746B;
+    --green:#3A6B52; --green-soft:#7FA890; --green-tint:#E2EBE3;
+    --line:#DED8CD; --hair:#E7E1D6; --card:#FBFAF7; --radius:18px;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
   }
+  .mono{font-family:var(--mono);}
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html,body{margin:0;padding:0;}
   body{
     font-family:'Pretendard',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
-    background:var(--cream);
-    color:var(--ink);
-    line-height:1.5;
-    -webkit-font-smoothing:antialiased;
+    background:var(--cream);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;
     overscroll-behavior:none;
   }
   .wrap{max-width:520px;margin:0 auto;padding:0 20px 60px;min-height:100dvh;}
 
-  /* ---------- HERO ---------- */
-  header.hero{padding:48px 4px 26px;text-align:center;}
-  .eyebrow{font-size:13px;letter-spacing:.14em;color:var(--green);font-weight:600;text-transform:uppercase;}
-  .hero h1{font-size:30px;font-weight:800;margin:14px 0 6px;letter-spacing:-.02em;}
-  .hero p{font-size:15px;color:var(--muted);margin:0;}
-  .breather{width:120px;height:120px;margin:30px auto 8px;position:relative;}
-  .ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid var(--green-soft);opacity:.45;
-    animation:breathe 11s ease-in-out infinite;}
-  .ring:nth-child(2){animation-delay:0s;}
-  .core{position:absolute;top:50%;left:50%;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;
-    background:var(--green);animation:breatheCore 11s ease-in-out infinite;}
-  @keyframes breathe{0%,100%{transform:scale(.5);opacity:.5}45%{transform:scale(1.25);opacity:.18}}
-  @keyframes breatheCore{0%,100%{transform:scale(.7)}45%{transform:scale(1.15)}}
-  .hint{font-size:13px;color:var(--muted);margin-top:2px;}
+  /* ---------- STICKY HEADER ---------- */
+  .topbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;
+    padding:12px 20px;background:rgba(243,239,232,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--hair);}
+  .topbar .mark{display:flex;align-items:center;gap:9px;}
+  .topbar .glyph{width:22px;height:22px;color:var(--green);}
+  .topbar .wm{font-family:var(--mono);font-weight:700;font-size:15px;letter-spacing:.02em;color:var(--ink);}
+  .topbar .sep{width:1px;height:13px;background:var(--line);}
+  .topbar .sub{font-size:12px;color:var(--muted);font-weight:600;}
+  .topbar .sos{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--green);
+    border:1.5px solid var(--green-soft);border-radius:999px;padding:5px 11px;background:transparent;cursor:pointer;}
+  .topbar .sos:active{transform:scale(.96);}
 
-  /* ---------- LIST ---------- */
-  .section-label{font-size:13px;color:var(--muted);font-weight:600;margin:30px 4px 12px;letter-spacing:.02em;}
-  .tool{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:none;cursor:pointer;
-    background:var(--sand);border:1px solid var(--line);border-radius:var(--radius);
-    padding:16px 16px;margin-bottom:11px;transition:transform .12s ease, box-shadow .12s ease;}
+  /* ---------- HERO ---------- */
+  header.hero{padding:38px 4px 14px;text-align:center;}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.22em;color:var(--green-soft);font-weight:600;text-transform:uppercase;}
+  .hero h1{font-size:29px;font-weight:800;margin:14px 0 10px;letter-spacing:-.02em;}
+  .when{font-size:14px;color:var(--muted);margin:0;}
+  .big30{font-size:23px;font-weight:700;margin:3px 0 0;letter-spacing:-.01em;}
+  .big30 b{font-size:30px;font-weight:800;color:var(--green);}
+
+  /* dramatic breathing orb */
+  .orbstage{width:200px;height:200px;margin:26px auto 6px;position:relative;display:grid;place-items:center;}
+  .glow{position:absolute;width:200px;height:200px;border-radius:50%;
+    background:radial-gradient(circle, rgba(127,168,144,.34), rgba(127,168,144,0) 64%);
+    animation:glowPulse 9s ease-in-out infinite;}
+  .wave{position:absolute;width:70px;height:70px;border-radius:50%;border:1.6px solid var(--green-soft);
+    opacity:0;animation:emanate 7s ease-out infinite;}
+  .wave:nth-child(2){animation-delay:0s;}
+  .wave:nth-child(3){animation-delay:1.75s;}
+  .wave:nth-child(4){animation-delay:3.5s;}
+  .wave:nth-child(5){animation-delay:5.25s;}
+  .orb{position:relative;width:62px;height:62px;border-radius:50%;
+    background:radial-gradient(circle at 38% 34%, #5b8f72, var(--green) 68%);
+    box-shadow:0 0 30px rgba(58,107,82,.30);animation:orbBreath 9s ease-in-out infinite;}
+  .orb::after{content:"";position:absolute;top:30%;left:30%;width:18%;height:18%;border-radius:50%;background:rgba(255,255,255,.85);}
+  @keyframes emanate{0%{transform:scale(.5);opacity:.6}70%{opacity:.06}100%{transform:scale(2.5);opacity:0}}
+  @keyframes orbBreath{0%,100%{transform:scale(.9);box-shadow:0 0 26px rgba(58,107,82,.25)}
+    50%{transform:scale(1.12);box-shadow:0 0 60px rgba(58,107,82,.5)}}
+  @keyframes glowPulse{0%,100%{transform:scale(.8);opacity:.5}50%{transform:scale(1.15);opacity:.95}}
+
+  .hint{font-size:13px;color:var(--muted);margin-top:6px;}
+
+  /* ---------- SYMPTOM ENTRY ---------- */
+  .ask-wrap{margin:30px 4px 13px;}
+  .idx{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--green-soft);letter-spacing:.05em;margin-right:8px;}
+  .ask{font-size:16px;font-weight:800;letter-spacing:-.01em;display:inline;}
+  .ask-sub{font-size:12.5px;color:var(--muted);margin:5px 0 13px;}
+  .chips{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:6px;}
+  .chip{flex:1 1 calc(50% - 5px);display:flex;align-items:center;gap:8px;cursor:pointer;
+    border:1px solid var(--hair);background:var(--card);border-radius:14px;padding:13px 13px;
+    font-family:inherit;font-size:14.5px;font-weight:600;color:var(--ink);text-align:left;
+    transition:transform .12s ease, border-color .12s ease, background .12s ease;}
+  .chip:last-child{flex-basis:100%;}
+  .chip:active{transform:scale(.97);}
+  .chip:hover{border-color:var(--green-soft);}
+  .chip:focus-visible{outline:2.5px solid var(--green);outline-offset:2px;}
+  .chip .e{font-size:18px;}
+
+  /* ---------- TOOL LIST ---------- */
+  .section-label{margin:30px 4px 13px;}
+  .section-label .t{font-size:14px;color:var(--ink);font-weight:800;}
+  .section-label .s{font-size:12.5px;color:var(--muted);font-weight:500;margin-left:6px;}
+  .tool{display:flex;align-items:center;gap:14px;width:100%;text-align:left;cursor:pointer;
+    background:var(--card);border:1px solid var(--hair);border-radius:var(--radius);
+    padding:15px 16px;margin-bottom:11px;box-shadow:0 1px 2px rgba(43,43,40,.03), 0 6px 18px rgba(58,107,82,.04);
+    transition:transform .12s ease, box-shadow .25s ease, border-color .25s ease;}
   .tool:active{transform:scale(.985);}
   .tool:focus-visible{outline:2.5px solid var(--green);outline-offset:2px;}
-  .tool .ic{flex:0 0 46px;height:46px;border-radius:14px;background:var(--green-tint);
-    display:grid;place-items:center;font-size:22px;}
+  .tool.flash{border-color:var(--green);box-shadow:0 0 0 3px rgba(58,107,82,.18);}
+  .tool .ic{flex:0 0 46px;height:46px;border-radius:13px;background:var(--green-tint);display:grid;place-items:center;color:var(--green);}
+  .tool .ic svg{width:24px;height:24px;}
   .tool .meta{flex:1;min-width:0;}
+  .tool .badge{display:inline-block;font-size:11px;font-weight:700;color:var(--green);
+    background:var(--green-tint);border-radius:999px;padding:2px 8px;margin-bottom:5px;}
   .tool .t{display:block;font-size:16px;font-weight:700;letter-spacing:-.01em;}
   .tool .d{display:block;font-size:13px;color:var(--muted);margin-top:3px;}
-  .tool .dur{flex:0 0 auto;font-size:12px;font-weight:600;color:var(--green);
-    background:var(--green-tint);border-radius:999px;padding:5px 9px;}
+  .tool .dur{flex:0 0 auto;font-family:var(--mono);font-size:12px;font-weight:600;color:var(--green);
+    background:var(--green-tint);border-radius:999px;padding:5px 9px;align-self:flex-start;}
+  /* featured deep card */
+  .tool.feature{background:linear-gradient(135deg,#2F5C46,#3A6B52);border-color:transparent;box-shadow:0 8px 24px rgba(58,107,82,.22);}
+  .tool.feature .t{color:#F4F1EA;} .tool.feature .d{color:#BFD2C6;}
+  .tool.feature .ic{background:rgba(255,255,255,.13);color:#EAF1EC;}
+  .tool.feature .badge{background:rgba(255,255,255,.16);color:#F4F1EA;}
+  .tool.feature .dur{background:rgba(255,255,255,.16);color:#F4F1EA;}
 
-  footer.foot{margin-top:34px;padding:20px 6px 0;border-top:1px solid var(--line);text-align:center;}
-  .foot .care{font-size:12.5px;color:var(--muted);line-height:1.65;}
-  .foot .brand{font-size:13px;color:var(--ink);font-weight:700;margin-top:14px;}
-  .foot a.cta{display:inline-block;margin-top:14px;font-size:14px;font-weight:700;color:var(--green);
-    text-decoration:none;border:1.5px solid var(--green);border-radius:999px;padding:10px 18px;}
+  footer.foot{margin-top:30px;}
+  .safety{background:var(--sand);border:1px solid var(--hair);border-radius:var(--radius);padding:20px 20px;}
+  .safety .lbl{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11.5px;font-weight:700;
+    letter-spacing:.16em;color:var(--green);text-transform:uppercase;}
+  .safety .lbl svg{width:16px;height:16px;}
+  .safety h3{font-size:16px;font-weight:800;margin:12px 0 8px;line-height:1.45;letter-spacing:-.01em;}
+  .safety p{font-size:13px;color:var(--muted);line-height:1.65;margin:0;}
+  .cta{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;width:100%;
+    background:#23231F;color:#F4F1EA;font-size:15px;font-weight:700;text-decoration:none;
+    border-radius:16px;padding:16px;transition:transform .1s ease;}
+  .cta:active{transform:scale(.99);}
+  .foot .brand{text-align:center;font-size:12.5px;color:var(--muted);font-weight:600;margin-top:18px;display:flex;align-items:center;justify-content:center;gap:7px;}
+  .foot .brand .glyph{width:15px;height:15px;color:var(--green-soft);}
+  .foot .brand .handle{font-family:var(--mono);color:var(--green);text-decoration:none;font-weight:600;}
+  .foot .brand .handle:hover{text-decoration:underline;}
 
   /* ---------- PLAYER ---------- */
   .player{position:fixed;inset:0;background:var(--cream);display:none;flex-direction:column;z-index:50;}
@@ -72,6 +132,11 @@
   .pbar{height:100%;width:0;background:var(--green);transition:width .25s linear;}
   .ptop{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;}
   .ptop .ttl{font-size:15px;font-weight:700;}
+  .psound{border:1.5px solid var(--line);background:var(--cream);color:var(--muted);font-family:inherit;
+    font-size:12.5px;font-weight:600;border-radius:999px;padding:6px 11px;cursor:pointer;white-space:nowrap;
+    transition:background .15s ease, color .15s ease, border-color .15s ease;}
+  .psound[aria-pressed="true"]{background:var(--green);color:#fff;border-color:var(--green);}
+  .psound:focus-visible{outline:2px solid var(--green);outline-offset:2px;}
   .pclose{border:none;background:transparent;font-size:15px;color:var(--muted);font-weight:600;cursor:pointer;padding:6px 4px;}
   .pclose:focus-visible{outline:2px solid var(--green);outline-offset:2px;border-radius:8px;}
   .stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 20px 30px;gap:18px;}
@@ -79,14 +144,18 @@
   .plabel{font-size:26px;font-weight:800;color:var(--green);min-height:34px;letter-spacing:-.01em;text-align:center;}
   .psub{font-size:15px;color:var(--muted);text-align:center;max-width:300px;min-height:22px;}
   .pcount{font-size:13px;color:var(--muted);letter-spacing:.04em;}
-
-  /* completion */
-  .done{position:absolute;inset:0;background:var(--cream);display:none;flex-direction:column;
-    align-items:center;justify-content:center;gap:10px;padding:30px;text-align:center;}
+  .done{position:absolute;inset:0;background:var(--cream);display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:30px;text-align:center;}
   .done.on{display:flex;}
   .done .leaf{font-size:34px;}
   .done h2{font-size:24px;font-weight:800;margin:6px 0 0;}
   .done p{font-size:15px;color:var(--muted);margin:0;max-width:300px;}
+  .done .enough{font-size:14.5px;color:var(--ink);font-weight:600;line-height:1.7;margin-top:14px;max-width:300px;}
+  .done .share{margin-top:24px;display:flex;flex-direction:column;align-items:center;gap:10px;
+    background:var(--green-tint);border-radius:18px;padding:18px 20px;max-width:320px;}
+  .done .share-t{font-size:13.5px;color:var(--ink);line-height:1.6;margin:0;font-weight:500;}
+  .btn.share-btn{background:var(--green);color:#fff;padding:11px 22px;}
+  .share-copied{font-size:12.5px;color:var(--green);font-weight:700;opacity:0;transition:opacity .2s ease;}
+  .share-copied.show{opacity:1;}
   .done .row{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;justify-content:center;}
   .btn{border:none;cursor:pointer;font-weight:700;font-size:14px;border-radius:999px;padding:12px 18px;font-family:inherit;}
   .btn.primary{background:var(--green);color:#fff;}
@@ -95,37 +164,57 @@
   .done a.btn{text-decoration:none;}
 
   @media (prefers-reduced-motion: reduce){
-    .ring,.core{animation:none;}
-    .ring{transform:scale(.9);} .core{transform:scale(.95);}
+    .wave,.orb,.glow{animation:none;}
+    .orb{transform:scale(1);} .glow{opacity:.7;}
   }
 </style>
 </head>
 <body>
+<header class="topbar">
+  <div class="mark">
+    <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg>
+    <span class="wm">BIUM</span>
+    <span class="sep"></span>
+    <span class="sub">안전모드 연구소</span>
+  </div>
+  <button class="sos" id="sos" aria-label="지금 바로 진정하기">SOS</button>
+</header>
 <div class="wrap" id="home">
   <header class="hero">
-    <div class="eyebrow">안전모드 연구소</div>
+    <div class="eyebrow">SAFE MODE LAB · EMERGENCY KIT</div>
     <h1>신경계 응급키트</h1>
-    <p>불안할 때, 잠 안 올 때 — 30초면 돼요.</p>
-    <div class="breather" aria-hidden="true">
-      <div class="ring"></div><div class="ring"></div>
-      <div class="core"></div>
+    <p class="when">불안할 때 · 잠 안 올 때</p>
+    <p class="big30"><b>30초</b>면 돼요.</p>
+    <div class="orbstage" aria-hidden="true">
+      <div class="glow"></div>
+      <div class="wave"></div><div class="wave"></div><div class="wave"></div><div class="wave"></div>
+      <div class="orb"></div>
     </div>
     <div class="hint">하나만 골라서, 화면을 따라 해보세요.</div>
   </header>
 
-  <div class="section-label">지금 바로 — 급할 때</div>
+  <!-- SYMPTOM ENTRY -->
+  <div class="ask-wrap"><span class="idx">00</span><span class="ask">오늘 어떤가요?</span></div>
+  <p class="ask-sub">누르면 딱 맞는 걸로 바로 시작해요.</p>
+  <div class="chips" id="chips"></div>
+
+  <div class="section-label"><span class="idx">01</span><span class="t">지금 바로</span><span class="s">— 급할 때</span></div>
   <div id="list-quick"></div>
 
-  <div class="section-label">조금 더 — 몸 풀기 · 잠</div>
+  <div class="section-label"><span class="idx">02</span><span class="t">조금 더</span><span class="s">— 몸 풀기 · 잠</span></div>
   <div id="list-more"></div>
 
   <footer class="foot">
-    <div class="care">
-      이건 스스로를 진정시키는 자기돌봄 연습이에요.<br>
-      의료·심리 치료를 대신하지 않아요. 많이 힘들면 혼자 두지 말고 전문가와 함께해요.
+    <div class="safety">
+      <div class="lbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>SAFETY NOTE</div>
+      <h3>이건 스스로를 진정시키는<br>자기돌봄 연습이에요.</h3>
+      <p>의료·심리 치료를 대신하지 않아요. 많이 힘들면 혼자 두지 말고 전문가와 함께해요.</p>
     </div>
     <a class="cta" href="https://bium-check.vercel.app" target="_blank" rel="noopener">내 신경계 상태 알아보기 →</a>
-    <div class="brand">안전모드 연구소 · @emotion_lab_bium</div>
+    <div class="brand">
+      <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>
+      안전모드 연구소 · <a href="https://www.threads.com/@emotion_lab_bium" target="_blank" rel="noopener" class="handle">@emotion_lab_bium</a>
+    </div>
   </footer>
 </div>
 
@@ -133,6 +222,7 @@
 <div class="player" id="player" role="dialog" aria-modal="true" aria-label="가이드">
   <div class="pbar-wrap"><div class="pbar" id="pbar"></div></div>
   <div class="ptop">
+    <button class="psound" id="p-sound" aria-pressed="false">🔔 소리 켜기</button>
     <div class="ttl" id="p-ttl">가이드</div>
     <button class="pclose" id="p-close">닫기 ✕</button>
   </div>
@@ -142,14 +232,19 @@
     <div class="psub" id="p-sub"></div>
     <div class="pcount" id="p-count"></div>
   </div>
-
   <div class="done" id="done">
-    <div class="leaf">🌿</div>
+    <div class="leaf">🌱</div>
     <h2 id="done-h">잘했어요</h2>
-    <p id="done-p">어깨, 툭 내려놨나요? 불안은 누르는 게 아니라 몸한테 안전하다고 알려주는 거예요.</p>
+    <p id="done-p"></p>
+    <p class="enough">지금 몸이 아주 조금이라도 편안해졌다면,<br>그걸로 충분합니다.</p>
     <div class="row">
       <button class="btn primary" id="done-again">한 번 더</button>
       <button class="btn ghost" id="done-home">처음으로</button>
+    </div>
+    <div class="share">
+      <p class="share-t">다른 사람에게도 도움이 될 수 있어요.<br>이 페이지를 공유해 주세요.</p>
+      <button class="btn share-btn" id="done-share">🌿 공유하기</button>
+      <span class="share-copied" id="share-copied">링크가 복사됐어요 ✓</span>
     </div>
     <div class="row">
       <a class="btn link" href="https://bium-check.vercel.app" target="_blank" rel="noopener">내 신경계 상태 알아보기 →</a>
@@ -160,305 +255,230 @@
 <script>
 (function(){
   "use strict";
-  var TAU = Math.PI*2;
-  function ease(x){ x=Math.max(0,Math.min(1,x)); return x*x*(3-2*x); }
-  function lerp(a,b,u){ return a+(b-a)*u; }
-  function buzz(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
+  var TAU=Math.PI*2;
+  function ease(x){x=Math.max(0,Math.min(1,x));return x*x*(3-2*x);}
+  function lerp(a,b,u){return a+(b-a)*u;}
+  function buzz(ms){try{if(navigator.vibrate)navigator.vibrate(ms);}catch(e){}}
 
-  var COL = {
-    cream:'#F3EFE8', green:'#3A6B52', greenSoft:'#7FA890',
-    tint:'#E2EBE3', line:'#DED8CD', ink:'#2B2B28', dim:'#1d2b22'
+  // ---------- SINGING BOWL (Web Audio synthesis) ----------
+  var actx=null, master=null, soundNodes=[], soundOn=false;
+  function ensureCtx(){
+    if(!actx){var AC=window.AudioContext||window.webkitAudioContext; if(AC) actx=new AC();}
+    if(actx&&actx.state==='suspended'){try{actx.resume();}catch(e){}}
+    return !!actx;
+  }
+  function startBowl(){
+    if(!ensureCtx()||master) return;
+    master=actx.createGain(); master.gain.value=0;
+    var lp=actx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=1700; lp.Q.value=0.4;
+    master.connect(lp); lp.connect(actx.destination);
+    var root=146.83; // D3, warm
+    var partials=[{r:1,g:0.5},{r:2.01,g:0.26},{r:3.0,g:0.13},{r:4.18,g:0.07}];
+    soundNodes=[];
+    partials.forEach(function(p){
+      [-1,1].forEach(function(s){
+        var o=actx.createOscillator(); o.type='sine';
+        o.frequency.value=root*p.r + s*(0.5+0.35*p.r); // small offset -> slow beating shimmer
+        var g=actx.createGain(); g.gain.value=p.g*0.5;
+        o.connect(g); g.connect(master); o.start(); soundNodes.push(o);
+      });
+    });
+    // slow breathing swell
+    var lfo=actx.createOscillator(); lfo.type='sine'; lfo.frequency.value=0.11;
+    var lg=actx.createGain(); lg.gain.value=0.045;
+    lfo.connect(lg); lg.connect(master.gain); lfo.start(); soundNodes.push(lfo);
+    var now=actx.currentTime;
+    master.gain.setValueAtTime(0,now);
+    master.gain.linearRampToValueAtTime(0.12, now+1.8);
+  }
+  function stopBowl(){
+    if(!master||!actx){master=null;soundNodes=[];return;}
+    var now=actx.currentTime, mg=master, nodes=soundNodes;
+    try{mg.gain.cancelScheduledValues(now);mg.gain.setValueAtTime(mg.gain.value||0.12,now);mg.gain.linearRampToValueAtTime(0,now+0.7);}catch(e){}
+    setTimeout(function(){nodes.forEach(function(n){try{n.stop&&n.stop();}catch(e){}try{n.disconnect&&n.disconnect();}catch(e){}});try{mg.disconnect();}catch(e){}},850);
+    master=null; soundNodes=[];
+  }
+  var COL={cream:'#F3EFE8',green:'#3A6B52',greenSoft:'#7FA890',tint:'#E2EBE3',line:'#DED8CD'};
+
+  // abstract line-icon system (breath/wave motif)
+  function svg(inner){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+inner+'</svg>';}
+  var ICONS={
+    breath: svg('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/>'),
+    eyes:   svg('<line x1="4" y1="12" x2="20" y2="12"/><circle cx="4.5" cy="12" r="2.3" fill="currentColor" stroke="none"/><circle cx="19.5" cy="12" r="2.3" fill="currentColor" stroke="none"/>'),
+    wide:   svg('<path d="M4 8V5h3"/><path d="M20 8V5h-3"/><path d="M4 16v3h3"/><path d="M20 16v3h-3"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/>'),
+    sigh:   svg('<path d="M3 14c2.4 0 2.4-5 4.8-5s2.4 5 4.8 5 2.4-5 4.8-5"/>'),
+    butterfly: svg('<circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/>'),
+    feet:   svg('<path d="M4 16.5a8 8 0 0 1 16 0"/><line x1="3" y1="16.5" x2="21" y2="16.5"/>'),
+    neck:   svg('<line x1="5" y1="8" x2="19" y2="8"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/>'),
+    sleep:  svg('<path d="M17 13.5A6.5 6.5 0 1 1 11.5 6 5.2 5.2 0 0 0 17 13.5z"/>')
   };
 
-  // ---------- TOOL DEFINITIONS ----------
-  var TOOLS = [
-    { id:'breath', icon:'🫁', title:'4-8 호흡', desc:'들숨 4초 · 날숨 8초', dur:'1분',
-      seconds:60, type:'breath' },
-    { id:'eyes', icon:'👀', title:'눈 좌우로', desc:'과각성 완화 · 가슴 답답할 때', dur:'30초',
-      seconds:30, type:'lateral' },
-    { id:'wide', icon:'🌍', title:'시야 넓히기', desc:'주변을 천천히 · 긴장 낮추기', dur:'30초',
-      seconds:30, type:'panoramic' },
-    { id:'sigh', icon:'😮‍💨', title:'생리적 한숨 3회', desc:'두 번 들이쉬고, 길게 내쉬고', dur:'30초',
-      seconds:30, type:'sigh' },
-    { id:'butterfly', icon:'🤲', title:'나비 포옹', desc:'좌우 교차로 톡톡', dur:'40초',
-      seconds:40, type:'alternate' },
-    { id:'feet', icon:'👣', title:'발바닥 감각 깨우기', desc:'바닥이 나를 받치고 있어요', dur:'36초',
-      seconds:0, type:'steps', steps:[
-        {t:'두 발을 바닥에 평평하게',  s:'신발은 벗어도 좋아요', sec:6},
-        {t:'발뒤꿈치에 무게를 실어봐요', s:'천천히, 지그시', sec:6},
-        {t:'엄지발가락으로 바닥을 눌러요', s:'', sec:6},
-        {t:'새끼발가락 쪽도 눌러봐요',   s:'', sec:6},
-        {t:'발바닥 전체로 바닥을 느껴요', s:'', sec:6},
-        {t:'지금, 바닥이 나를 받치고 있어요', s:'애써 서 있지 않아도 돼요', sec:6}
-      ]},
-    { id:'neck', icon:'🧘', title:'목·어깨 힘 빼기', desc:'올렸다가, 툭', dur:'36초',
-      seconds:0, type:'steps', steps:[
-        {t:'숨을 들이쉬며 어깨를 귀까지', s:'바짝 끌어올려요', sec:5},
-        {t:'잠깐, 멈춰요', s:'', sec:3},
-        {t:'툭 — 떨어뜨려요', s:'길게 내쉬면서', sec:6},
-        {t:'고개를 오른쪽으로 천천히', s:'귀가 어깨에 가까워지게', sec:7},
-        {t:'반대쪽도 천천히', s:'', sec:7},
-        {t:'턱의 힘을 풀고, 혀를 떼요', s:'입천장에서 혀를 살짝', sec:8}
-      ]},
-    { id:'sleep', icon:'😴', title:'잠 안 올 때 5분 루틴', desc:'호흡 → 눈 → 몸 내려놓기', dur:'5분',
-      seconds:300, type:'sleep' }
+  var TOOLS=[
+    {id:'breath',icon:'🫁',title:'4-8 호흡',desc:'들숨 4초 · 날숨 8초',dur:'1분',seconds:60,type:'breath',badge:'🔥 가장 효과적'},
+    {id:'eyes',icon:'👀',title:'눈 좌우로',desc:'과각성 완화 · 가슴 답답할 때',dur:'30초',seconds:30,type:'lateral',badge:'⭐ 가장 인기'},
+    {id:'wide',icon:'🌍',title:'시야 넓히기',desc:'주변을 천천히 · 긴장 낮추기',dur:'30초',seconds:30,type:'panoramic'},
+    {id:'sigh',icon:'😮‍💨',title:'생리적 한숨 3회',desc:'두 번 들이쉬고, 길게 내쉬고',dur:'30초',seconds:30,type:'sigh'},
+    {id:'butterfly',icon:'🤲',title:'나비 포옹',desc:'좌우 교차로 톡톡',dur:'40초',seconds:40,type:'alternate'},
+    {id:'feet',icon:'👣',title:'발바닥 감각 깨우기',desc:'바닥이 나를 받치고 있어요',dur:'36초',seconds:0,type:'steps',steps:[
+      {t:'두 발을 바닥에 평평하게',s:'신발은 벗어도 좋아요',sec:6},{t:'발뒤꿈치에 무게를 실어봐요',s:'천천히, 지그시',sec:6},
+      {t:'엄지발가락으로 바닥을 눌러요',s:'',sec:6},{t:'새끼발가락 쪽도 눌러봐요',s:'',sec:6},
+      {t:'발바닥 전체로 바닥을 느껴요',s:'',sec:6},{t:'지금, 바닥이 나를 받치고 있어요',s:'애써 서 있지 않아도 돼요',sec:6}]},
+    {id:'neck',icon:'🧘',title:'목·어깨 힘 빼기',desc:'올렸다가, 툭',dur:'36초',seconds:0,type:'steps',steps:[
+      {t:'숨을 들이쉬며 어깨를 귀까지',s:'바짝 끌어올려요',sec:5},{t:'잠깐, 멈춰요',s:'',sec:3},
+      {t:'툭 — 떨어뜨려요',s:'길게 내쉬면서',sec:6},{t:'고개를 오른쪽으로 천천히',s:'귀가 어깨에 가까워지게',sec:7},
+      {t:'반대쪽도 천천히',s:'',sec:7},{t:'턱의 힘을 풀고, 혀를 떼요',s:'입천장에서 혀를 살짝',sec:8}]},
+    {id:'sleep',icon:'😴',title:'잠 안 올 때 5분 루틴',desc:'호흡 → 눈 → 몸 내려놓기',dur:'5분',seconds:300,type:'sleep',badge:'💤 잠 안 올 때',feature:true}
+  ];
+  var QUICK=['breath','eyes','wide','sigh'];
+  var byId={}; TOOLS.forEach(function(t){byId[t.id]=t;});
+
+  // symptom -> tool
+  var SYMPTOMS=[
+    {e:'❤️',label:'심장이 뛴다',tool:'breath'},
+    {e:'😰',label:'불안하다',tool:'eyes'},
+    {e:'😵‍💫',label:'머리가 복잡하다',tool:'wide'},
+    {e:'😴',label:'잠이 안 온다',tool:'sleep'},
+    {e:'🥹',label:'이유 없이 울컥',tool:'butterfly'}
   ];
 
-  var QUICK = ['breath','eyes','wide','sigh'];
+  // build chips
+  var chipsEl=document.getElementById('chips');
+  SYMPTOMS.forEach(function(s){
+    var b=document.createElement('button');
+    b.className='chip'; b.setAttribute('aria-label',s.label);
+    b.innerHTML='<span class="e">'+s.e+'</span><span>'+s.label+'</span>';
+    b.addEventListener('click',function(){ openTool(byId[s.tool]); });
+    chipsEl.appendChild(b);
+  });
 
-  // ---------- BUILD HOME LIST ----------
+  // build cards
   function card(tool){
-    var b = document.createElement('button');
-    b.className = 'tool';
-    b.setAttribute('aria-label', tool.title);
-    b.innerHTML =
-      '<span class="ic">'+tool.icon+'</span>'+
-      '<span class="meta"><span class="t">'+tool.title+'</span>'+
-      '<span class="d">'+tool.desc+'</span></span>'+
+    var b=document.createElement('button');
+    b.className='tool'+(tool.feature?' feature':''); b.id='card-'+tool.id; b.setAttribute('aria-label',tool.title);
+    b.innerHTML='<span class="ic">'+(ICONS[tool.id]||'')+'</span><span class="meta">'+
+      (tool.badge?'<span class="badge">'+tool.badge+'</span>':'')+
+      '<span class="t">'+tool.title+'</span><span class="d">'+tool.desc+'</span></span>'+
       '<span class="dur">'+tool.dur+'</span>';
-    b.addEventListener('click', function(){ openTool(tool); });
+    b.addEventListener('click',function(){ openTool(tool); });
     return b;
   }
-  var lq = document.getElementById('list-quick');
-  var lm = document.getElementById('list-more');
-  TOOLS.forEach(function(t){ (QUICK.indexOf(t.id)>=0?lq:lm).appendChild(card(t)); });
+  var lq=document.getElementById('list-quick'),lm=document.getElementById('list-more');
+  TOOLS.forEach(function(t){(QUICK.indexOf(t.id)>=0?lq:lm).appendChild(card(t));});
 
   // ---------- PLAYER ENGINE ----------
-  var player = document.getElementById('player');
-  var pbar = document.getElementById('pbar');
-  var pTtl = document.getElementById('p-ttl');
-  var pLabel = document.getElementById('p-label');
-  var pSub = document.getElementById('p-sub');
-  var pCount = document.getElementById('p-count');
-  var doneEl = document.getElementById('done');
-  var cv = document.getElementById('cv');
-  var ctx = cv.getContext('2d');
-  var CVS = 720;
+  var player=document.getElementById('player'),pbar=document.getElementById('pbar');
+  var pTtl=document.getElementById('p-ttl'),pLabel=document.getElementById('p-label');
+  var pSub=document.getElementById('p-sub'),pCount=document.getElementById('p-count');
+  var doneEl=document.getElementById('done');
+  var cv=document.getElementById('cv'),ctx=cv.getContext('2d'),CVS=720;
+  var raf=null,start=0,cur=null,lastPhase='';
 
-  var raf=null, start=0, cur=null, lastPhase='';
-
-  function setCanvas(){
-    var dpr = Math.min(window.devicePixelRatio||1, 2);
-    cv.width = CVS*dpr; cv.height = CVS*dpr;
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-  }
-
+  function setCanvas(){var dpr=Math.min(window.devicePixelRatio||1,2);cv.width=CVS*dpr;cv.height=CVS*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
   function openTool(tool){
-    cur = tool;
-    pTtl.textContent = tool.title;
-    pLabel.textContent=''; pSub.textContent=''; pCount.textContent='';
-    pbar.style.width='0%';
-    doneEl.classList.remove('on');
-    player.classList.add('on');
-    document.body.style.overflow='hidden';
-    setCanvas();
-    start = performance.now();
-    lastPhase='';
+    cur=tool;pTtl.textContent=tool.title;pLabel.textContent='';pSub.textContent='';pCount.textContent='';
+    pbar.style.width='0%';doneEl.classList.remove('on');player.classList.add('on');
+    document.body.style.overflow='hidden';setCanvas();start=performance.now();lastPhase='';
+    if(soundOn) startBowl();
     loop();
   }
-  function closeTool(){
-    if(raf) cancelAnimationFrame(raf); raf=null; cur=null;
-    player.classList.remove('on');
-    document.body.style.overflow='';
-  }
+  function closeTool(){if(raf)cancelAnimationFrame(raf);raf=null;cur=null;player.classList.remove('on');document.body.style.overflow='';stopBowl();}
   function finish(){
-    if(raf) cancelAnimationFrame(raf); raf=null;
-    pbar.style.width='100%';
-    var msg = doneMessages[cur.id] || doneMessages._default;
-    document.getElementById('done-h').textContent = msg.h;
-    document.getElementById('done-p').textContent = msg.p;
-    doneEl.classList.add('on');
-    buzz([40,60,40]);
+    if(raf)cancelAnimationFrame(raf);raf=null;pbar.style.width='100%';
+    var m=doneMessages[cur.id]||doneMessages._default;
+    document.getElementById('done-h').textContent=m.h;document.getElementById('done-p').textContent=m.p;
+    doneEl.classList.add('on');buzz([40,60,40]);
   }
-
-  var doneMessages = {
-    _default:{h:'잘했어요', p:'어깨, 툭 내려놨나요? 불안은 누르는 게 아니라 몸한테 안전하다고 알려주는 거예요.'},
-    breath:{h:'잘 쉬었어요', p:'날숨이 길어지면 심박이 느려져요. 그게 신경계엔 "안전" 신호예요.'},
-    eyes:{h:'잘했어요', p:'시선이 좌우로 움직이면 몸이 "둘러볼 여유가 있네 = 안전하네"로 읽어요.'},
-    wide:{h:'시야가 넓어졌나요?', p:'좁아진 시야를 여는 것만으로도 위협 경보가 한 칸 내려가요.'},
-    sigh:{h:'후—', p:'생리적 한숨은 가장 빠른 진정 스위치예요. 필요할 때 언제든.'},
-    butterfly:{h:'스스로를 안아줬어요', p:'좌우 교차 자극은 과열된 뇌를 천천히 식혀줘요.'},
-    feet:{h:'바닥을 느꼈나요?', p:'발바닥 감각은 지금 여기로 돌아오는 가장 단단한 길이에요.'},
-    neck:{h:'힘이 빠졌나요?', p:'긴장은 "올렸다 툭" 풀 때 더 잘 놓여요.'},
-    sleep:{h:'수고했어요', p:'잘 자려고 애쓰지 마세요. 몸이 안전하다고 느끼면, 잠은 따라와요.'}
+  var doneMessages={
+    _default:{h:'잘했어요',p:'어깨, 툭 내려놨나요? 불안은 누르는 게 아니라 몸한테 안전하다고 알려주는 거예요.'},
+    breath:{h:'잘 쉬었어요',p:'날숨이 길어지면 심박이 느려져요. 그게 신경계엔 "안전" 신호예요.'},
+    eyes:{h:'잘했어요',p:'시선이 좌우로 움직이면 몸이 "둘러볼 여유가 있네 = 안전하네"로 읽어요.'},
+    wide:{h:'시야가 넓어졌나요?',p:'좁아진 시야를 여는 것만으로도 위협 경보가 한 칸 내려가요.'},
+    sigh:{h:'후—',p:'생리적 한숨은 가장 빠른 진정 스위치예요. 필요할 때 언제든.'},
+    butterfly:{h:'스스로를 안아줬어요',p:'좌우 교차 자극은 과열된 뇌를 천천히 식혀줘요.'},
+    feet:{h:'바닥을 느꼈나요?',p:'발바닥 감각은 지금 여기로 돌아오는 가장 단단한 길이에요.'},
+    neck:{h:'힘이 빠졌나요?',p:'긴장은 "올렸다 툭" 풀 때 더 잘 놓여요.'},
+    sleep:{h:'수고했어요',p:'잘 자려고 애쓰지 마세요. 몸이 안전하다고 느끼면, 잠은 따라와요.'}
   };
 
-  // ----- drawing primitives -----
-  function bg(){ ctx.fillStyle=COL.cream; ctx.fillRect(0,0,CVS,CVS); }
-  function halo(x,y,r,p){
-    p=p||1;
-    [[3.2,0.10],[2.3,0.18],[1.6,0.32]].forEach(function(a){
-      var rr=r*a[0]*p;
-      ctx.beginPath(); ctx.fillStyle='rgba(127,168,144,'+a[1]+')';
-      ctx.arc(x,y,rr,0,TAU); ctx.fill();
-    });
-  }
-  function dot(x,y,r){
-    ctx.beginPath(); ctx.fillStyle=COL.green; ctx.arc(x,y,r,0,TAU); ctx.fill();
-    ctx.beginPath(); ctx.fillStyle='#fff'; ctx.arc(x,y,r*0.38,0,TAU); ctx.fill();
-  }
-  function setPhase(label, sub, doBuzz){
-    if(label!==undefined && label!==lastPhase){
-      lastPhase=label; if(doBuzz) buzz(30);
-    }
-    if(label!==undefined) pLabel.textContent=label;
-    if(sub!==undefined) pSub.textContent=sub;
-  }
+  function bg(){ctx.fillStyle=COL.cream;ctx.fillRect(0,0,CVS,CVS);}
+  function halo(x,y,r,p){p=p||1;[[3.2,0.10],[2.3,0.18],[1.6,0.32]].forEach(function(a){var rr=r*a[0]*p;ctx.beginPath();ctx.fillStyle='rgba(127,168,144,'+a[1]+')';ctx.arc(x,y,rr,0,TAU);ctx.fill();});}
+  function dot(x,y,r){ctx.beginPath();ctx.fillStyle=COL.green;ctx.arc(x,y,r,0,TAU);ctx.fill();ctx.beginPath();ctx.fillStyle='#fff';ctx.arc(x,y,r*0.38,0,TAU);ctx.fill();}
+  function setPhase(label,sub,doBuzz){if(label!==undefined&&label!==lastPhase){lastPhase=label;if(doBuzz)buzz(30);}if(label!==undefined)pLabel.textContent=label;if(sub!==undefined)pSub.textContent=sub;}
 
-  // ----- per-type frame renderers: return true when complete -----
-  function frame(t){ // t = elapsed seconds
-    var C=CVS/2;
-    switch(cur.type){
-      case 'breath': return drawBreath(t, 4, 8, C); 
-      case 'lateral': return drawLateral(t, C);
-      case 'panoramic': return drawPanoramic(t, C);
-      case 'sigh': return drawSigh(t, C);
-      case 'alternate': return drawButterfly(t, C);
-      case 'steps': return drawSteps(t, C);
-      case 'sleep': return drawSleep(t, C);
-    }
-    return true;
-  }
+  function frame(t){var C=CVS/2;switch(cur.type){
+    case 'breath':return drawBreath(t,4,8,C);case 'lateral':return drawLateral(t,C);
+    case 'panoramic':return drawPanoramic(t,C);case 'sigh':return drawSigh(t,C);
+    case 'alternate':return drawButterfly(t,C);case 'steps':return drawSteps(t,C);
+    case 'sleep':return drawSleep(t,C);}return true;}
 
-  function drawBreath(t, inS, outS, C){
-    bg();
-    var cyc=inS+outS, p=t%cyc, f, lab, sub;
-    if(p<inS){ f=ease(p/inS); lab='들이쉬고'; sub='코로, 배까지'; }
-    else { f=1-ease((p-inS)/outS); lab='천천히 내쉬고'; sub='입으로, 길게'; }
-    var minR=34, maxR=150, r=lerp(minR,maxR,f);
-    ctx.beginPath(); ctx.strokeStyle=COL.line; ctx.lineWidth=3; ctx.arc(C,C,maxR,0,TAU); ctx.stroke();
-    halo(C,C,r); dot(C,C,Math.max(r,16));
-    setPhase(lab, sub, true);
-    return false;
-  }
+  function drawBreath(t,inS,outS,C){bg();var cyc=inS+outS,p=t%cyc,f,lab,sub;
+    if(p<inS){f=ease(p/inS);lab='들이쉬고';sub='코로, 배까지';}else{f=1-ease((p-inS)/outS);lab='천천히 내쉬고';sub='입으로, 길게';}
+    var r=lerp(34,150,f);ctx.beginPath();ctx.strokeStyle=COL.line;ctx.lineWidth=3;ctx.arc(C,C,150,0,TAU);ctx.stroke();
+    halo(C,C,r);dot(C,C,Math.max(r,16));setPhase(lab,sub,true);
+    if(cur&&cur.type==='breath'){var tot=Math.max(1,Math.round((cur.seconds||60)/cyc));var n=Math.min(Math.floor(t/cyc)+1,tot);pCount.textContent=n+' / '+tot+'번';}
+    return false;}
+  function drawLateral(t,C){bg();var amp=C-150,per=6,x=C+amp*Math.sin(TAU*(t/per)),y=C;
+    ctx.beginPath();ctx.strokeStyle=COL.line;ctx.lineWidth=3;ctx.moveTo(C-amp,y);ctx.lineTo(C+amp,y);ctx.stroke();
+    [-amp,amp].forEach(function(dx){ctx.beginPath();ctx.fillStyle=COL.line;ctx.arc(C+dx,y,6,0,TAU);ctx.fill();});
+    halo(x,y,34);dot(x,y,28);setPhase('눈으로 점을 따라가요','고개는 그대로');return false;}
+  function drawPanoramic(t,C){bg();var ap=ease(Math.min(t/12,1)),rad=lerp(C*0.22,C*1.15,ap);
+    var g=ctx.createRadialGradient(C,C,rad*0.55,C,C,rad);g.addColorStop(0,'rgba(29,43,34,0)');g.addColorStop(1,'rgba(29,43,34,0.16)');
+    ctx.fillStyle=g;ctx.fillRect(0,0,CVS,CVS);var pr=10+4*Math.sin(t*1.4);halo(C,C,pr,0.8);dot(C,C,12);
+    var lab,sub;if(t<6){lab='정면, 한 점을';sub='편하게 한 곳을 바라봐요';}else if(t<14){lab='이제 양옆으로';sub='눈은 그대로, 곁눈으로 옆을 느껴요';}
+    else if(t<22){lab='위아래 가장자리까지';sub='시야를 천천히 넓혀요';}else{lab='방 전체가 한눈에';sub='넓어진 시야에 머물러요';}
+    setPhase(lab,sub);return false;}
+  function drawSigh(t,C){bg();var rep=8,n=Math.floor(t/rep),p=t%rep,f,lab,sub;
+    if(p<1.6){f=ease(p/1.6)*0.7;lab='코로 들이쉬고';sub='';}else if(p<2.0){f=0.7+ease((p-1.6)/0.4)*0.3;lab='한 번 더, 살짝!';sub='짧게 톡 들이쉬어요';}
+    else if(p<7.0){f=1-ease((p-2.0)/5.0);lab='입으로 길게 내쉬고';sub='후—';}else{f=0;lab='쉬고';sub='';}
+    var r=lerp(30,150,f);ctx.beginPath();ctx.strokeStyle=COL.line;ctx.lineWidth=3;ctx.arc(C,C,150,0,TAU);ctx.stroke();
+    halo(C,C,Math.max(r,30));dot(C,C,Math.max(r,14));setPhase(lab,sub,p<0.05);pCount.textContent=(Math.min(n+1,3))+' / 3';return false;}
+  function drawButterfly(t,C){bg();var off=C*0.42,side=Math.floor(t/0.9)%2,prog=(t%0.9)/0.9,xs=[C-off,C+off];
+    [0,1].forEach(function(i){var act=(i===side),base=22,r=act?base+12*(1-prog):base;ctx.globalAlpha=act?1:0.4;if(act)halo(xs[i],C,r,1);dot(xs[i],C,r);ctx.globalAlpha=1;});
+    setPhase(side?'오른쪽':'왼쪽','두 손을 가슴에 X자로, 번갈아 톡',t%0.9<0.05);return false;}
+  function drawSteps(t,C){bg();var steps=cur.steps,acc=0,idx=0,into=0,dur=1;
+    for(var i=0;i<steps.length;i++){if(t<acc+steps[i].sec){idx=i;into=t-acc;dur=steps[i].sec;break;}acc+=steps[i].sec;idx=i;}
+    var pr=40+10*Math.sin(t*1.1);halo(C,C,pr,0.7);dot(C,C,20);
+    var rr=180,frac=Math.min(into/dur,1);ctx.beginPath();ctx.strokeStyle=COL.line;ctx.lineWidth=5;ctx.arc(C,C,rr,0,TAU);ctx.stroke();
+    ctx.beginPath();ctx.strokeStyle=COL.greenSoft;ctx.lineWidth=5;ctx.lineCap='round';ctx.arc(C,C,rr,-Math.PI/2,-Math.PI/2+TAU*frac);ctx.stroke();
+    setPhase(steps[idx].t,steps[idx].s,into<0.06);pCount.textContent=(idx+1)+' / '+steps.length;return false;}
+  function drawSleep(t,C){
+    if(t<120){drawBreath(t,4,8,C);pCount.textContent='1 / 3 · 숨을 길게';}
+    else if(t<210){bg();var amp=C-160,per=8,x=C+amp*Math.sin(TAU*((t-120)/per)),y=C;
+      ctx.beginPath();ctx.strokeStyle=COL.line;ctx.lineWidth=3;ctx.moveTo(C-amp,y);ctx.lineTo(C+amp,y);ctx.stroke();
+      halo(x,y,30);dot(x,y,24);setPhase('눈을 천천히 좌우로','고개는 그대로, 힘 빼고');pCount.textContent='2 / 3 · 눈을 천천히';}
+    else{bg();var seg=['이마와 눈가의 힘을 풀어요','턱과 혀를 내려놓아요','어깨를 무겁게 떨어뜨려요','가슴과 배가 알아서 오르내리게','손끝, 다리, 발끝까지 무거워져요','이불에 몸을 완전히 맡겨요'];
+      var st=Math.floor((t-210)/15);if(st>seg.length-1)st=seg.length-1;var pr=46+8*Math.sin(t*0.8);
+      halo(C,C,pr,0.6);dot(C,C,18);setPhase(seg[st],'내려놓을수록 좋아요',(t-210)%15<0.06);pCount.textContent='3 / 3 · 몸을 내려놓기';}
+    return false;}
 
-  function drawLateral(t, C){
-    bg();
-    var amp=C-150, per=6, x=C+amp*Math.sin(TAU*(t/per)), y=C;
-    ctx.beginPath(); ctx.strokeStyle=COL.line; ctx.lineWidth=3;
-    ctx.moveTo(C-amp,y); ctx.lineTo(C+amp,y); ctx.stroke();
-    [-amp,amp].forEach(function(dx){ ctx.beginPath(); ctx.fillStyle=COL.line; ctx.arc(C+dx,y,6,0,TAU); ctx.fill(); });
-    halo(x,y,34); dot(x,y,28);
-    setPhase('눈으로 점을 따라가요','고개는 그대로');
-    return false;
-  }
+  function loop(){raf=requestAnimationFrame(loop);var t=(performance.now()-start)/1000;
+    var total=cur.seconds||(cur.steps?cur.steps.reduce(function(a,s){return a+s.sec;},0):30);
+    frame(t);pbar.style.width=Math.min(t/total*100,100)+'%';if(t>=total)finish();}
 
-  function drawPanoramic(t, C){
-    bg();
-    // soft dim overlay with an expanding clear aperture
-    var ap = ease(Math.min(t/12,1)); // grow over 12s
-    var rad = lerp(C*0.22, C*1.15, ap);
-    var g = ctx.createRadialGradient(C,C,rad*0.55,C,C,rad);
-    g.addColorStop(0,'rgba(29,43,34,0)');
-    g.addColorStop(1,'rgba(29,43,34,0.16)');
-    ctx.fillStyle=g; ctx.fillRect(0,0,CVS,CVS);
-    // small focus dot at center, gentle pulse
-    var pr=10+4*Math.sin(t*1.4);
-    halo(C,C,pr,0.8); dot(C,C,12);
-    var lab,sub;
-    if(t<6){ lab='정면, 한 점을'; sub='편하게 한 곳을 바라봐요'; }
-    else if(t<14){ lab='이제 양옆으로'; sub='눈은 그대로, 곁눈으로 옆을 느껴요'; }
-    else if(t<22){ lab='위아래 가장자리까지'; sub='시야를 천천히 넓혀요'; }
-    else { lab='방 전체가 한눈에'; sub='넓어진 시야에 머물러요'; }
-    setPhase(lab,sub);
-    return false;
-  }
-
-  function drawSigh(t, C){
-    bg();
-    var rep=8, n=Math.floor(t/rep), p=t%rep, f, lab, sub;
-    if(p<1.6){ f=ease(p/1.6)*0.7; lab='코로 들이쉬고'; sub=''; }
-    else if(p<2.0){ f=0.7+ease((p-1.6)/0.4)*0.3; lab='한 번 더, 살짝!'; sub='짧게 톡 들이쉬어요'; }
-    else if(p<7.0){ f=1-ease((p-2.0)/5.0); lab='입으로 길게 내쉬고'; sub='후—'; }
-    else { f=0; lab='쉬고'; sub=''; }
-    var r=lerp(30,150,f);
-    ctx.beginPath(); ctx.strokeStyle=COL.line; ctx.lineWidth=3; ctx.arc(C,C,150,0,TAU); ctx.stroke();
-    halo(C,C,Math.max(r,30)); dot(C,C,Math.max(r,14));
-    setPhase(lab,sub, p<0.05);
-    pCount.textContent = (Math.min(n+1,3))+' / 3';
-    return false;
-  }
-
-  function drawButterfly(t, C){
-    bg();
-    var off=C*0.42, side=Math.floor(t/0.9)%2, prog=(t%0.9)/0.9;
-    var xs=[C-off, C+off];
-    [0,1].forEach(function(i){
-      var act=(i===side);
-      var base=22, r= act? base+12*(1-prog) : base;
-      ctx.globalAlpha = act?1:0.4;
-      if(act) halo(xs[i],C, r, 1);
-      dot(xs[i],C, r);
-      ctx.globalAlpha=1;
-    });
-    setPhase(side?'오른쪽':'왼쪽','두 손을 가슴에 X자로, 번갈아 톡', t%0.9<0.05);
-    return false;
-  }
-
-  function drawSteps(t, C){
-    bg();
-    var steps=cur.steps, acc=0, idx=0, into=0, dur=1;
-    for(var i=0;i<steps.length;i++){
-      if(t < acc+steps[i].sec){ idx=i; into=t-acc; dur=steps[i].sec; break; }
-      acc+=steps[i].sec; idx=i;
-    }
-    // gentle ambient pulse
-    var pr=40+10*Math.sin(t*1.1);
-    halo(C,C,pr,0.7); dot(C,C,20);
-    // per-step ring
-    var rr=180, frac=Math.min(into/dur,1);
-    ctx.beginPath(); ctx.strokeStyle=COL.line; ctx.lineWidth=5; ctx.arc(C,C,rr,0,TAU); ctx.stroke();
-    ctx.beginPath(); ctx.strokeStyle=COL.greenSoft; ctx.lineWidth=5; ctx.lineCap='round';
-    ctx.arc(C,C,rr,-Math.PI/2, -Math.PI/2 + TAU*frac); ctx.stroke();
-    setPhase(steps[idx].t, steps[idx].s, into<0.06);
-    pCount.textContent = (idx+1)+' / '+steps.length;
-    return false;
-  }
-
-  // 5-min sleep: 3 segments
-  function drawSleep(t, C){
-    if(t<120){          // 0-2min : 4-8 breath
-      drawBreath(t,4,8,C);
-      pCount.textContent='1 / 3 · 숨을 길게';
-    } else if(t<210){   // 2-3.5min : lateral gaze (slow)
-      bg();
-      var amp=C-160, per=8, x=C+amp*Math.sin(TAU*((t-120)/per)), y=C;
-      ctx.beginPath(); ctx.strokeStyle=COL.line; ctx.lineWidth=3; ctx.moveTo(C-amp,y); ctx.lineTo(C+amp,y); ctx.stroke();
-      halo(x,y,30); dot(x,y,24);
-      setPhase('눈을 천천히 좌우로','고개는 그대로, 힘 빼고');
-      pCount.textContent='2 / 3 · 눈을 천천히';
-    } else {            // 3.5-5min : body scan down
-      bg();
-      var seg=[ '이마와 눈가의 힘을 풀어요','턱과 혀를 내려놓아요','어깨를 무겁게 떨어뜨려요',
-                '가슴과 배가 알아서 오르내리게','손끝, 다리, 발끝까지 무거워져요','이불에 몸을 완전히 맡겨요'];
-      var st=Math.floor((t-210)/15); if(st>seg.length-1) st=seg.length-1;
-      var pr=46+8*Math.sin((t)*0.8);
-      halo(C,C,pr,0.6); dot(C,C,18);
-      setPhase(seg[st],'내려놓을수록 좋아요', (t-210)%15<0.06);
-      pCount.textContent='3 / 3 · 몸을 내려놓기';
-    }
-    return false;
-  }
-
-  // ----- main loop -----
-  function loop(){
-    raf = requestAnimationFrame(loop);
-    var t = (performance.now()-start)/1000;
-    var total = cur.seconds || (cur.steps? cur.steps.reduce(function(a,s){return a+s.sec;},0):30);
-    frame(t);
-    pbar.style.width = Math.min(t/total*100,100)+'%';
-    if(t>=total) finish();
-  }
-
-  // ----- wiring -----
-  document.getElementById('p-close').addEventListener('click', closeTool);
-  document.getElementById('done-home').addEventListener('click', closeTool);
-  document.getElementById('done-again').addEventListener('click', function(){
-    doneEl.classList.remove('on'); start=performance.now(); lastPhase=''; pbar.style.width='0%';
-    pLabel.textContent=''; pSub.textContent=''; pCount.textContent=''; loop();
+  document.getElementById('p-close').addEventListener('click',closeTool);
+  document.getElementById('sos').addEventListener('click',function(){ openTool(byId['breath']); });
+  document.getElementById('p-sound').addEventListener('click',function(){
+    ensureCtx(); soundOn=!soundOn;
+    this.setAttribute('aria-pressed', soundOn?'true':'false');
+    this.textContent = soundOn? '🔔 소리 끄기' : '🔔 소리 켜기';
+    if(soundOn) startBowl(); else stopBowl();
   });
-  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && player.classList.contains('on')) closeTool(); });
-  window.addEventListener('resize', function(){ if(cur) setCanvas(); });
+  document.getElementById('done-home').addEventListener('click',closeTool);
+  document.getElementById('done-again').addEventListener('click',function(){
+    doneEl.classList.remove('on');start=performance.now();lastPhase='';pbar.style.width='0%';
+    pLabel.textContent='';pSub.textContent='';pCount.textContent='';loop();});
+  document.getElementById('done-share').addEventListener('click',function(){
+    var url=location.href.split('#')[0];
+    var data={title:'신경계 응급키트',text:'불안할 때·잠 안 올 때, 30초면 돼요. 신경계 응급키트 🌿',url:url};
+    if(navigator.share){ navigator.share(data).catch(function(){}); }
+    else {
+      var done=function(){var c=document.getElementById('share-copied');c.classList.add('show');setTimeout(function(){c.classList.remove('show');},2200);};
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(done).catch(done);}
+      else{try{var ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);done();}catch(e){}}
+    }
+  });
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&player.classList.contains('on'))closeTool();});
+  window.addEventListener('resize',function(){if(cur)setCanvas();});
 })();
 </script>
 </body>
